@@ -1,0 +1,27 @@
+config:
+  target: 'http://localhost:3000/api/users'
+  phases:
+    - duration: 60
+      arrivalRate: 50
+      rampTo: 5
+      name: Warm Up
+  plugins:
+    ensure: {}
+    appmetrics: {}
+    metrics-by-endpoint: {}
+  appmetrics:
+    threshold: 100
+  ensure:
+    thresholds:
+      - http.response_time.p99: 100
+      - http.response_time.p95: 75
+
+scenarios:
+  - flow:
+      - loop:
+          - post:
+               url: "/login"
+               json:
+                    email: "sachin@gmail.con"
+                    password: "12345678"
+        count: 10
